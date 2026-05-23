@@ -26,12 +26,30 @@ _ROLE_MAP: dict[str, type[BaseMessage]] = {
 
 def _serialize(msg: BaseMessage) -> dict:
     role = type(msg).__name__.replace("Message", "").lower()
-    return {"role": role, "content": str(msg.content)}
+    result: dict = {"role": role, "content": str(msg.content)}
+    if hasattr(msg, "additional_kwargs") and msg.additional_kwargs:
+        result["additional_kwargs"] = msg.additional_kwargs
+    if hasattr(msg, "tool_calls") and msg.tool_calls:
+        result["tool_calls"] = msg.tool_calls
+    if hasattr(msg, "name") and msg.name:
+        result["name"] = msg.name
+    if role == "tool" and hasattr(msg, "tool_call_id"):
+        result["tool_call_id"] = msg.tool_call_id
+    return result
 
 
 def _deserialize(raw: dict) -> BaseMessage:
     cls = _ROLE_MAP.get(raw.get("role", ""), AIMessage)
-    return cls(content=raw.get("content", ""))
+    kwargs: dict = {"content": raw.get("content", "")}
+    if "additional_kwargs" in raw:
+        kwargs["additional_kwargs"] = raw["additional_kwargs"]
+    if "tool_calls" in raw:
+        kwargs["tool_calls"] = raw["tool_calls"]
+    if "name" in raw:
+        kwargs["name"] = raw["name"]
+    if raw.get("role") == "tool" and "tool_call_id" in raw:
+        kwargs["tool_call_id"] = raw["tool_call_id"]
+    return cls(**kwargs)
 
 
 class ReActAgent:

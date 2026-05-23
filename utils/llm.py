@@ -19,6 +19,7 @@ class LLMClient:
             api_key=config.llm_api_key,
             base_url=config.llm_base_url,
             model=config.llm_model,
+            extra_body={"thinking": {"type": "disabled"}},
         )
 
     def ask(self, system: str, user: str, *, temperature: float = 0.3) -> str:
@@ -60,6 +61,7 @@ class LLMClient:
             base_url=config.llm_base_url,
             model=config.llm_model,
             temperature=temperature,
+            extra_body={"thinking": {"type": "disabled"}},
         )
 
 
