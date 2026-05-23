@@ -198,3 +198,5 @@ redis>=5.0.0                 # 可选，会话持久化
 | `|` 联合类型 | `Session | None`、`str | list | dict` |
 | `ChatPromptTemplate` | `summarize_tool.py`、`report_tool.py`、`qa_chain.py`、`nodes.py`、`planner.py` |
 | LCEL `\|` 管道组合 | `qa_chain.py` RAG 链：`retriever \| format \| prompt \| LLM \| output` |
+#   K n o w l e d g e - B a s e - Q u e s t i o n - A n s w e r i n g  
+ 
